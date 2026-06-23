@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Administrativo — GOLAB</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Login Screen (shown until correct credentials are entered) -->
+  <div id="admin-login-screen" style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--color-off-black);padding:1.5rem;">
+    <div style="width:100%;max-width:360px;background:white;border-radius:var(--radius-lg);padding:var(--space-2xl) var(--space-xl);box-shadow:var(--shadow-lg);">
+      <div style="text-align:center;margin-bottom:var(--space-lg);">
+        <span style="font-family:var(--font-display);font-size:1.6rem;font-weight:700;color:var(--color-green);">GOLAB</span>
+        <p style="font-size:0.78rem;color:var(--color-muted);letter-spacing:0.08em;text-transform:uppercase;margin-top:0.2rem;">Panel Administrativo</p>
+      </div>
+      <form id="admin-login-form">
+        <div class="form-group">
+          <label for="admin-user">Usuario</label>
+          <input type="text" id="admin-user" autocomplete="username" required>
+        </div>
+        <div class="form-group">
+          <label for="admin-pass">Contraseña</label>
+          <input type="password" id="admin-pass" autocomplete="current-password" required>
+        </div>
+        <p id="admin-login-error" style="display:none;color:#dc2626;font-size:0.82rem;margin-bottom:var(--space-md);">Usuario o contraseña incorrectos.</p>
+        <button type="submit" class="btn btn--primary btn--lg" style="width:100%;justify-content:center;">Entrar</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="admin-app" style="display:none;">
+
+  <!-- Simulated Admin Nav -->
+  <nav id="navbar" style="background:var(--color-off-black);">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <span class="nav-logo-text" style="color:var(--color-green-light);">GOLAB</span>
+        <span style="font-size:0.7rem;color:rgba(255,255,255,0.4);font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-left:0.5rem;">Admin</span>
+      </a>
+      <div style="display:flex;align-items:center;gap:1rem;">
+        <span style="font-size:0.8rem;color:rgba(255,255,255,0.5);">Admin GOLAB</span>
+        <div style="width:36px;height:36px;background:var(--color-green);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.85rem;">G</div>
+        <button id="admin-logout-btn" type="button" style="background:none;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.6);border-radius:100px;padding:0.4rem 0.9rem;font-size:0.78rem;cursor:pointer;">Cerrar sesión</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="admin-page">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-logo">GOLAB Panel</div>
+      <nav>
+        <button class="admin-nav-item active" onclick="showSection('dashboard')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect></svg>
+          Dashboard
+        </button>
+        <button class="admin-nav-item" onclick="showSection('productos')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path></svg>
+          Productos
+        </button>
+        <button class="admin-nav-item" onclick="showSection('pedidos')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+          Pedidos
+        </button>
+        <button class="admin-nav-item" onclick="showSection('clientes')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 00-3-3.87"></path></svg>
+          Clientes
+        </button>
+        <button class="admin-nav-item" onclick="showSection('estadisticas')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+          Estadísticas
+        </button>
+        <div style="height:1px;background:rgba(255,255,255,0.08);margin:1rem 0;"></div>
+        <a href="index.html" class="admin-nav-item" style="color:rgba(255,255,255,0.4);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path></svg>
+          Ver tienda
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+
+      <!-- DASHBOARD -->
+      <div id="sec-dashboard">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-xl);">
+          <div>
+            <h1 style="font-family:var(--font-display);font-size:1.8rem;margin-bottom:0.2rem;">Bienvenido, GOLAB 👋</h1>
+            <p style="color:var(--color-muted);font-size:0.875rem;">Panel de control — datos simulados para demostración</p>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem 1rem;background:rgba(74,124,89,0.08);border-radius:100px;font-size:0.8rem;color:var(--color-green);font-weight:600;border:1px solid rgba(74,124,89,0.2);">
+            <span style="width:8px;height:8px;background:var(--color-green);border-radius:50%;animation:pulse 2s infinite;display:block;"></span>
+            Sistema activo
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="admin-stats">
+          <div class="admin-stat">
+            <div class="admin-stat__value">Bs. 12,480</div>
+            <div class="admin-stat__label">Ventas este mes</div>
+            <div class="admin-stat__trend trend--up">↑ +23% vs mes anterior</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat__value">247</div>
+            <div class="admin-stat__label">Pedidos totales</div>
+            <div class="admin-stat__trend trend--up">↑ +18 este mes</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat__value">183</div>
+            <div class="admin-stat__label">Clientes registrados</div>
+            <div class="admin-stat__trend trend--up">↑ +12 nuevos</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat__value">4.9★</div>
+            <div class="admin-stat__label">Calificación promedio</div>
+            <div class="admin-stat__trend trend--up">↑ 490 reseñas</div>
+          </div>
+        </div>
+
+        <!-- Chart -->
+        <div class="admin-card">
+          <div class="admin-card__header">📊 Ventas por mes — 2025</div>
+          <div class="chart-bars">
+            <div class="chart-bar">
+              <div class="chart-bar__val">Bs.6.2k</div>
+              <div class="chart-bar__fill" style="height:52%"></div>
+              <div class="chart-bar__label">Ene</div>
+            </div>
+            <div class="chart-bar">
+              <div class="chart-bar__val">Bs.7.1k</div>
+              <div class="chart-bar__fill" style="height:60%"></div>
+              <div class="chart-bar__label">Feb</div>
+            </div>
+            <div class="chart-bar">
+              <div class="chart-bar__val">Bs.8.4k</div>
+              <div class="chart-bar__fill" style="height:70%"></div>
+              <div class="chart-bar__label">Mar</div>
+            </div>
+            <div class="chart-bar">
+              <div class="chart-bar__val">Bs.7.8k</div>
+              <div class="chart-bar__fill" style="height:65%"></div>
+              <div class="chart-bar__label">Abr</div>
+            </div>
+            <div class="chart-bar">
+              <div class="chart-bar__val">Bs.9.9k</div>
+              <div class="chart-bar__fill" style="height:83%"></div>
+              <div class="chart-bar__label">May</div>
+            </div>
+            <div class="chart-bar">
+              <div class="chart-bar__val">Bs.10.5k</div>
+              <div class="chart-bar__fill" style="height:88%"></div>
+              <div class="chart-bar__label">Jun</div>
+            </div>
+            <div class="chart-bar">
+              <div class="chart-bar__val">Bs.9.2k</div>
+              <div class="chart-bar__fill" style="height:77%"></div>
+              <div class="chart-bar__label">Jul</div>
+            </div>
+            <div class="chart-bar">
+              <div class="chart-bar__val">Bs.11.8k</div>
+              <div class="chart-bar__fill" style="height:99%"></div>
+              <div class="chart-bar__label">Ago</div>
+            </div>
+            <div class="chart-bar">
+              <div class="chart-bar__val">Bs.12.5k</div>
+              <div class="chart-bar__fill" style="height:100%;background:linear-gradient(to top,var(--color-gold),var(--color-gold-light))"></div>
+              <div class="chart-bar__label" style="font-weight:600">Sep</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Top products & recent orders -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-xl);">
+          <div class="admin-card">
+            <div class="admin-card__header">🏆 Productos más vendidos</div>
+            <div style="padding:var(--space-md) var(--space-xl);">
+              <div style="display:flex;align-items:center;gap:1rem;padding:0.75rem 0;border-bottom:1px solid #F3F4F6;">
+                <div style="width:40px;height:40px;background:rgba(74,124,89,0.1);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1.2rem;">🌿</div>
+                <div style="flex:1;"><div style="font-size:0.875rem;font-weight:500;">Gomitas de Moringa</div><div style="font-size:0.75rem;color:var(--color-muted);">89 vendidas</div></div>
+                <div style="font-size:0.875rem;font-weight:600;color:var(--color-green);">Bs. 4,005</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:1rem;padding:0.75rem 0;border-bottom:1px solid #F3F4F6;">
+                <div style="width:40px;height:40px;background:rgba(123,92,66,0.1);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1.2rem;">🌙</div>
+                <div style="flex:1;"><div style="font-size:0.875rem;font-weight:500;">Gomitas de Valeriana</div><div style="font-size:0.75rem;color:var(--color-muted);">74 vendidas</div></div>
+                <div style="font-size:0.875rem;font-weight:600;color:var(--color-green);">Bs. 3,552</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:1rem;padding:0.75rem 0;border-bottom:1px solid #F3F4F6;">
+                <div style="width:40px;height:40px;background:rgba(201,168,76,0.1);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1.2rem;">🏔️</div>
+                <div style="flex:1;"><div style="font-size:0.875rem;font-weight:500;">Gomitas de Muña</div><div style="font-size:0.75rem;color:var(--color-muted);">61 vendidas</div></div>
+                <div style="font-size:0.875rem;font-weight:600;color:var(--color-green);">Bs. 2,562</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:1rem;padding:0.75rem 0;">
+                <div style="width:40px;height:40px;background:rgba(26,26,26,0.08);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1.2rem;">🍷</div>
+                <div style="flex:1;"><div style="font-size:0.875rem;font-weight:500;">Gomitas con Licor</div><div style="font-size:0.75rem;color:var(--color-muted);">23 vendidas</div></div>
+                <div style="font-size:0.875rem;font-weight:600;color:var(--color-green);">Bs. 1,265</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="admin-card">
+            <div class="admin-card__header">📦 Pedidos recientes</div>
+            <div style="padding:var(--space-sm) 0;">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem var(--space-xl);border-bottom:1px solid #F9F9F9;">
+                <div><div style="font-size:0.82rem;font-weight:500;">#247 — María F. C.</div><div style="font-size:0.72rem;color:var(--color-muted);">Moringa x2 · Bs. 90</div></div>
+                <span class="status-badge status-badge--success">Entregado</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem var(--space-xl);border-bottom:1px solid #F9F9F9;">
+                <div><div style="font-size:0.82rem;font-weight:500;">#246 — Carlos A. M.</div><div style="font-size:0.72rem;color:var(--color-muted);">Valeriana x1 · Bs. 48</div></div>
+                <span class="status-badge status-badge--pending">En camino</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem var(--space-xl);border-bottom:1px solid #F9F9F9;">
+                <div><div style="font-size:0.82rem;font-weight:500;">#245 — Andrea V. L.</div><div style="font-size:0.72rem;color:var(--color-muted);">Muña x3 · Bs. 126</div></div>
+                <span class="status-badge status-badge--success">Entregado</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem var(--space-xl);border-bottom:1px solid #F9F9F9;">
+                <div><div style="font-size:0.82rem;font-weight:500;">#244 — Roberto E. G.</div><div style="font-size:0.72rem;color:var(--color-muted);">Licor x2 · Bs. 110</div></div>
+                <span class="status-badge status-badge--info">Procesando</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem var(--space-xl);">
+                <div><div style="font-size:0.82rem;font-weight:500;">#243 — Lucía P. H.</div><div style="font-size:0.72rem;color:var(--color-muted);">Moringa x1, Valeriana x1 · Bs. 93</div></div>
+                <span class="status-badge status-badge--success">Entregado</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRODUCTS SECTION -->
+      <div id="sec-productos" style="display:none;">
+        <h2 style="font-family:var(--font-display);font-size:1.6rem;margin-bottom:var(--space-xl);">Gestión de Productos</h2>
+        <div class="admin-card">
+          <div class="admin-card__header" style="display:flex;justify-content:space-between;align-items:center;">
+            <span>Productos registrados (4)</span>
+            <button class="btn btn--primary btn--sm">+ Nuevo producto</button>
+          </div>
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Categoría</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th>Ventas</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody id="products-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ORDERS SECTION -->
+      <div id="sec-pedidos" style="display:none;">
+        <h2 style="font-family:var(--font-display);font-size:1.6rem;margin-bottom:var(--space-xl);">Historial de Pedidos</h2>
+        <div class="admin-card">
+          <div class="admin-card__header">Pedidos simulados (últimos 30 días)</div>
+          <table class="admin-table">
+            <thead>
+              <tr><th>#Pedido</th><th>Cliente</th><th>Productos</th><th>Total</th><th>Ciudad</th><th>Estado</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>#247</td><td>María F. C.</td><td>Moringa x2</td><td>Bs. 90</td><td>La Paz</td><td><span class="status-badge status-badge--success">Entregado</span></td></tr>
+              <tr><td>#246</td><td>Carlos A. M.</td><td>Valeriana x1</td><td>Bs. 63</td><td>Santa Cruz</td><td><span class="status-badge status-badge--pending">En camino</span></td></tr>
+              <tr><td>#245</td><td>Andrea V. L.</td><td>Muña x3</td><td>Bs. 126</td><td>Cochabamba</td><td><span class="status-badge status-badge--success">Entregado</span></td></tr>
+              <tr><td>#244</td><td>Roberto E. G.</td><td>Licor x2</td><td>Bs. 125</td><td>Sucre</td><td><span class="status-badge status-badge--info">Procesando</span></td></tr>
+              <tr><td>#243</td><td>Lucía P. H.</td><td>Moringa x1, Valeriana x1</td><td>Bs. 93</td><td>La Paz</td><td><span class="status-badge status-badge--success">Entregado</span></td></tr>
+              <tr><td>#242</td><td>Diego S. M.</td><td>Muña x2</td><td>Bs. 99</td><td>Oruro</td><td><span class="status-badge status-badge--success">Entregado</span></td></tr>
+              <tr><td>#241</td><td>Ana M. V.</td><td>Valeriana x2, Muña x1</td><td>Bs. 138</td><td>Tarija</td><td><span class="status-badge status-badge--pending">En camino</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- CLIENTS SECTION -->
+      <div id="sec-clientes" style="display:none;">
+        <h2 style="font-family:var(--font-display);font-size:1.6rem;margin-bottom:var(--space-xl);">Clientes</h2>
+        <div class="admin-stats" style="grid-template-columns:repeat(3,1fr);margin-bottom:var(--space-xl);">
+          <div class="admin-stat"><div class="admin-stat__value">183</div><div class="admin-stat__label">Total clientes</div></div>
+          <div class="admin-stat"><div class="admin-stat__value">76%</div><div class="admin-stat__label">Tasa de retención</div></div>
+          <div class="admin-stat"><div class="admin-stat__value">Bs. 68</div><div class="admin-stat__label">Ticket promedio</div></div>
+        </div>
+        <div class="admin-card">
+          <div class="admin-card__header">Clientes más frecuentes</div>
+          <table class="admin-table">
+            <thead><tr><th>Cliente</th><th>Ciudad</th><th>Pedidos</th><th>Total gastado</th><th>Producto favorito</th></tr></thead>
+            <tbody>
+              <tr><td>María F. C.</td><td>La Paz</td><td>8</td><td>Bs. 624</td><td>Valeriana</td></tr>
+              <tr><td>Carlos A. M.</td><td>Santa Cruz</td><td>6</td><td>Bs. 468</td><td>Moringa</td></tr>
+              <tr><td>Andrea V. L.</td><td>Cochabamba</td><td>5</td><td>Bs. 390</td><td>Muña</td></tr>
+              <tr><td>Roberto E. G.</td><td>Sucre</td><td>4</td><td>Bs. 312</td><td>Licor</td></tr>
+              <tr><td>Lucía P. H.</td><td>La Paz</td><td>7</td><td>Bs. 546</td><td>Moringa</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- STATS SECTION -->
+      <div id="sec-estadisticas" style="display:none;">
+        <h2 style="font-family:var(--font-display);font-size:1.6rem;margin-bottom:var(--space-xl);">Estadísticas Avanzadas</h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-xl);">
+          <div class="admin-card">
+            <div class="admin-card__header">🗺️ Pedidos por departamento</div>
+            <div style="padding:var(--space-lg) var(--space-xl);">
+              <div style="display:flex;flex-direction:column;gap:var(--space-md);">
+                <div style="display:flex;align-items:center;gap:var(--space-md);">
+                  <span style="font-size:0.82rem;min-width:80px;">La Paz</span>
+                  <div style="flex:1;background:#F3F4F6;border-radius:4px;height:10px;"><div style="width:65%;background:var(--color-green);height:100%;border-radius:4px;"></div></div>
+                  <span style="font-size:0.8rem;font-weight:600;min-width:30px;">65%</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:var(--space-md);">
+                  <span style="font-size:0.82rem;min-width:80px;">Santa Cruz</span>
+                  <div style="flex:1;background:#F3F4F6;border-radius:4px;height:10px;"><div style="width:18%;background:var(--color-gold);height:100%;border-radius:4px;"></div></div>
+                  <span style="font-size:0.8rem;font-weight:600;min-width:30px;">18%</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:var(--space-md);">
+                  <span style="font-size:0.82rem;min-width:80px;">Cochabamba</span>
+                  <div style="flex:1;background:#F3F4F6;border-radius:4px;height:10px;"><div style="width:10%;background:var(--color-brown);height:100%;border-radius:4px;"></div></div>
+                  <span style="font-size:0.8rem;font-weight:600;min-width:30px;">10%</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:var(--space-md);">
+                  <span style="font-size:0.82rem;min-width:80px;">Otros</span>
+                  <div style="flex:1;background:#F3F4F6;border-radius:4px;height:10px;"><div style="width:7%;background:#9CA3AF;height:100%;border-radius:4px;"></div></div>
+                  <span style="font-size:0.8rem;font-weight:600;min-width:30px;">7%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="admin-card">
+            <div class="admin-card__header">📱 Canales de venta</div>
+            <div style="padding:var(--space-lg) var(--space-xl);">
+              <div style="display:flex;flex-direction:column;gap:var(--space-md);">
+                <div style="display:flex;align-items:center;gap:var(--space-md);">
+                  <span style="font-size:0.82rem;min-width:100px;">WhatsApp</span>
+                  <div style="flex:1;background:#F3F4F6;border-radius:4px;height:10px;"><div style="width:72%;background:#25D366;height:100%;border-radius:4px;"></div></div>
+                  <span style="font-size:0.8rem;font-weight:600;min-width:30px;">72%</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:var(--space-md);">
+                  <span style="font-size:0.82rem;min-width:100px;">Instagram</span>
+                  <div style="flex:1;background:#F3F4F6;border-radius:4px;height:10px;"><div style="width:18%;background:#E1306C;height:100%;border-radius:4px;"></div></div>
+                  <span style="font-size:0.8rem;font-weight:600;min-width:30px;">18%</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:var(--space-md);">
+                  <span style="font-size:0.82rem;min-width:100px;">Sitio web</span>
+                  <div style="flex:1;background:#F3F4F6;border-radius:4px;height:10px;"><div style="width:10%;background:var(--color-green);height:100%;border-radius:4px;"></div></div>
+                  <span style="font-size:0.8rem;font-weight:600;min-width:30px;">10%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  </div> <!-- /#admin-app -->
+
+  <style>
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+  </style>
+
+  <script>
+    // ── Acceso al panel: gate simple en el cliente ──────
+    // Esto NO es seguridad real (cualquiera que lea este archivo puede ver el hash),
+    // pero evita que un visitante casual entre por accidente o curiosidad.
+    // Para proteger datos reales de clientes/pedidos se necesita un backend con login real.
+    const ADMIN_AUTH_KEY = 'golab_admin_auth';
+    // sha256("usuario:contraseña") — credenciales actuales: admin / golab2026
+    // CAMBIA esto antes de publicar el sitio: abre la consola del navegador y ejecuta
+    // crypto.subtle.digest('SHA-256', new TextEncoder().encode('tuUsuario:tuClave')) (ver función sha256 abajo)
+    const ADMIN_CRED_HASH = '98a3f582e70de070e4ac7574c0b9599218570a78734ba5f9ca1214e84dd17fe2';
+
+    async function sha256(text) {
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    function showAdminApp() {
+      document.getElementById('admin-login-screen').style.display = 'none';
+      document.getElementById('admin-app').style.display = 'block';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (sessionStorage.getItem(ADMIN_AUTH_KEY) === 'true') {
+        showAdminApp();
+      }
+
+      const loginForm = document.getElementById('admin-login-form');
+      const loginError = document.getElementById('admin-login-error');
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const user = document.getElementById('admin-user').value.trim();
+        const pass = document.getElementById('admin-pass').value;
+        const hash = await sha256(`${user}:${pass}`);
+        if (hash === ADMIN_CRED_HASH) {
+          sessionStorage.setItem(ADMIN_AUTH_KEY, 'true');
+          loginError.style.display = 'none';
+          showAdminApp();
+        } else {
+          loginError.style.display = 'block';
+        }
+      });
+
+      document.getElementById('admin-logout-btn')?.addEventListener('click', () => {
+        sessionStorage.removeItem(ADMIN_AUTH_KEY);
+        location.reload();
+      });
+    });
+  </script>
+
+  <script src="js/products.js"></script>
+  <script>
+    function showSection(id) {
+      ['dashboard','productos','pedidos','clientes','estadisticas'].forEach(s => {
+        document.getElementById('sec-' + s).style.display = s === id ? 'block' : 'none';
+      });
+      document.querySelectorAll('.admin-nav-item').forEach((btn, i) => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+    }
+
+    // Render products table
+    document.addEventListener('DOMContentLoaded', () => {
+      const tbody = document.getElementById('products-table-body');
+      if (!tbody) return;
+      const sales = [89, 61, 74, 23];
+      tbody.innerHTML = GOLAB_PRODUCTS.map((p, i) => `
+        <tr>
+          <td>
+            <div style="display:flex;align-items:center;gap:0.75rem;">
+              <div style="width:32px;height:32px;background:${p.color}20;border-radius:6px;display:flex;align-items:center;justify-content:center;border:1px solid ${p.color}40;"></div>
+              <div>
+                <div style="font-weight:500;font-size:0.875rem;">${p.name}</div>
+                <div style="font-size:0.72rem;color:var(--color-muted);">${p.netContent}</div>
+              </div>
+            </div>
+          </td>
+          <td><span style="text-transform:capitalize;font-size:0.82rem;">${p.category}</span></td>
+          <td style="font-weight:600;">${p.currency} ${p.price}</td>
+          <td>
+            <span style="color:${p.stock > 20 ? 'var(--color-green)' : '#dc2626'};font-weight:600;">${p.stock}</span>
+          </td>
+          <td>${sales[i]} uds.</td>
+          <td><span class="status-badge status-badge--success">Activo</span></td>
+        </tr>
+      `).join('');
+    });
+  </script>
+</body>
+</html>
